@@ -1,5 +1,11 @@
 == Shopsense
 
+Installation 
+
+sudo gem install Shopsense
+
+
+
 API Overview
 
 # Set your API key in the shopsense.yml file
