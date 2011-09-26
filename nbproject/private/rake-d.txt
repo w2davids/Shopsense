@@ -1,0 +1,16 @@
+clean=
+clobber=
+clobber_package=
+clobber_rdoc=
+default=
+gem=
+gemspec=
+package=
+pkg=
+pkg/Shopsense-0.1.0=
+pkg/Shopsense-0.1.0.gem=
+rdoc=
+rdoc/index.html=
+repackage=
+rerdoc=
+spec=

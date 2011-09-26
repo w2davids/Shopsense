@@ -1,12 +1,12 @@
 == Shopsense
 
-<h2>Installation</h2> 
+Installation
 ================
 sudo gem install Shopsense
 
 
 
-<h2>API Overview</h2>
+API Overview
 ============
 
 # Set your API key in the shopsense.yml file
@@ -18,11 +18,11 @@ require 'rubygems'
 require 'Shopsense'
 
 # Instantiate the ShopsenseAPI class
-shopsense= Shopsense::ShopsenseAPI.new;
+shopsense= Shopsense::ShopsenseAPI.new('uid0000-0000000-00');
 
-# Load YAML configuration file
-yml_config_filename='shopsense.yml'
-yml= shopsense.load_config(yml_config_filename);
+# Loads the YAML configuration file
+yml= shopsense.load_config();
+
 
 # Search
 puts shopsense.do_search({:format => 'json', :term =>'red dress', :min=> 0, :count => 10 });

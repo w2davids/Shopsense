@@ -1,9 +1,8 @@
 require 'rubygems'
 require 'Shopsense'
 
-yml_config_filename='../lib/shopsense.yml'
-shopsense= Shopsense::ShopsenseAPI.new;
-yml= shopsense.load_config(yml_config_filename);
+shopsense= Shopsense::ShopsenseAPI.new('uid9316-2194146-60');
+yml= shopsense.load_config();
 #puts shopsense.do_search({:format => 'json', :term =>'red dress', :min=> 0, :count => 10 });
 #puts shopsense.get_trends( :category => 109)
 #puts shopsense.get_look( :look => 548347 )

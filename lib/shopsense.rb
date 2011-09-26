@@ -9,17 +9,21 @@ module Shopsense
   
     @has_load_config= false
   
-    def initialize
-    
+    def initialize( api_key )
+      @pid= "pid=" + api_key
     end
 
 
 =begin
 Loads the YAML configuration file
 =end
-    def load_config( yml_config_filename )
-      @yml= YAML::load_file( yml_config_filename )
-      return @yml == nil ? 'shopsense.yml not loaded' : @yml
+    def load_config( yml_config_filename= nil )
+      if yml_config_filename == nil
+        @yml= YAML::load_file( '../config/shopsense.yml' )
+      else
+        @yml= YAML::load_file( yml_config_filename )
+      end
+      
     end
   
 =begin
@@ -65,14 +69,14 @@ prodid	The id of a specific product to return. This may be specified multiple ti
     def do_search( params= {} )
       url= @yml[ 'base_url'].to_s
       search_url= @yml['search_url'].to_s
-      pid= "pid=" + @yml['pid'].to_s
+      #pid= "pid=" + @yml['pid'].to_s
       format= "format=" + ( params.include?( :format) ? params[:format].to_s : "json")
       min_result= "min=" + ( params.include?(:min ) ? params[:min].to_s : 0.to_s )
       count="count=" + ( params.include?(:count) ? params[:count].to_s : 10.to_s)
     
       if params.include?(:term)
         search_term= "fts=" +  params[:term].split().join('+').to_s
-        uri= URI.parse( url + search_url + [pid, format, search_term, min_result, count].join('&') )
+        uri= URI.parse( url + search_url + [@pid, format, search_term, min_result, count].join('&') )
         return Net::HTTP.get_response(  uri )
       else
         raise "No search term provided!"
@@ -93,7 +97,7 @@ A list of trends in the given category. Each trend has a brand, category, url, a
     def get_trends( params= {})
       url= @yml[ 'base_url'].to_s
       trends_url= @yml['trends_url'].to_s
-      pid= "pid=" + @yml['pid'].to_s
+      #pid= "pid=" + @yml['pid'].to_s
       
       format= "format=" + (params.include?( :format) ? params[:format] : "json")
       
@@ -105,7 +109,7 @@ A list of trends in the given category. Each trend has a brand, category, url, a
       
       if params.include?( :products)
         product_id= "products=" +params[:products].to_s 
-        uri= URI.parse( url + trends_url + [pid, format, product_id].join('&') )
+        uri= URI.parse( url + trends_url + [@pid, format, product_id].join('&') )
       end
     
       return Net::HTTP.get_response( uri )
@@ -120,11 +124,11 @@ id	The ID number of the product. An easy way to get a product's ID is to find th
     def visit_retailer( params= {} )
       url= @yml[ 'base_url'].to_s
       visit_retailers_url= @yml['visit_retailers_url'].to_s
-      pid= "pid=" + @yml['pid'].to_s
+      #pid= "pid=" + @yml['pid'].to_s
       format= "format=" + ( params.include?( :format) ? params[:format].to_s : "json")
       retailer_id= params[:retailer_id].to_s
     
-      uri= URI.parse( url + visit_retailers_url + [pid, format, retailer_id].join('&') )
+      uri= URI.parse( url + visit_retailers_url + [@id, format, retailer_id].join('&') )
       return Net::HTTP.get_response(  uri )
     end
     
@@ -139,12 +143,12 @@ A single look, with title, description, a set of tags, and a list of products. T
     def get_look( params= {} )
       url= @yml[ 'base_url'].to_s
       look_url= @yml['look_url'].to_s
-      pid= "pid=" + @yml['pid'].to_s
+      #pid= "pid=" + @yml['pid'].to_s
       format= "format=" + ( params.include?( :format) ? params[:format].to_s : "json")
      
       if params.include?( :look )
         look= "look=" + params[ :look].to_s
-        uri= URI.parse( url + look_url + [pid, format, look].join( '&') )
+        uri= URI.parse( url + look_url + [@pid, format, look].join( '&') )
         return Net::HTTP.get_response(  uri )
       else
         raise "No look type provided!"
@@ -167,7 +171,7 @@ A list of looks of the given type. Each look has the fields listed above (see ap
     def get_looks( params= {})
       url= @yml[ 'base_url'].to_s
       looks_url= @yml['looks_url'].to_s
-      pid= "pid=" + @yml['pid'].to_s
+      #pid= "pid=" + @yml['pid'].to_s
       
       format= "format=" + ( params.include?( :format) ? params[:format].to_s : "json")
       min_result= "min=" + ( params.include?(:min ) ? params[:min].to_s : 0.to_s )
@@ -175,7 +179,7 @@ A list of looks of the given type. Each look has the fields listed above (see ap
   
       if params.include?( :type )
         look_type= "type=" + params[ :type].to_s
-        uri= URI.parse( url + looks_url + [pid, format, look_type, min_result, count].join('&') )
+        uri= URI.parse( url + looks_url + [@pid, format, look_type, min_result, count].join('&') )
         return Net::HTTP.get_response(  uri )
       else
         raise "No look type provided!"
@@ -195,14 +199,14 @@ A look id of the user's Stylebook, the look id of each individual look within th
     def get_stylebook( params= {} )
       url= @yml[ 'base_url'].to_s
       stylebook_url= @yml['stylebook_url'].to_s
-      pid= "pid=" + @yml['pid'].to_s
+      #pid= "pid=" + @yml['pid'].to_s
       format= "format=" + ( params.include?( :format) ? params[:format].to_s : "json")
       min_result= "min=" + ( params.include?(:min ) ? params[:min].to_s : 0.to_s )
       count="count=" + ( params.include?(:count) ? params[:count].to_s : 10.to_s)
       
       if params.include?( :handle)
         handle= "handle=" + params[:handle].to_s
-        uri= URI.parse( url + stylebook_url + [pid, format, handle].join('&') )
+        uri= URI.parse( url + stylebook_url + [@pid, format, handle].join('&') )
         return Net::HTTP.get_response(  uri )
       else
         raise "No handle provided!"
@@ -218,9 +222,9 @@ A list of all Brands, with id, name, url, and synonyms of each.
     def get_brands(params= {})
       url= @yml[ 'base_url'].to_s
       brands_url= @yml[ 'brands_url'].to_s
-      pid= "pid=" + @yml['pid'].to_s
+      #pid= "pid=" + @yml['pid'].to_s
       format= "format=" + ( params.include?( :format) ? params[:format].to_s : "json")
-      uri= URI.parse( url + brands_url  + [pid, format].join('&') )
+      uri= URI.parse( url + brands_url  + [@pid, format].join('&') )
       return Net::HTTP.get_response(  uri )
     end
 
@@ -234,10 +238,10 @@ A list of all Retailers, with id, name, and url of each.
     def get_retailers( params= {} )
       url= @yml[ 'base_url'].to_s
       retailers_url= @yml['retailers_url'].to_s
-      pid= "pid=" + @yml['pid'].to_s
+      #pid= "pid=" + @yml['pid'].to_s
       format= "format=" + ( params.include?( :format) ? params[:format].to_s : "json")
 
-      uri= URI.parse( url + retailers_url  + [pid, format].join('&') )
+      uri= URI.parse( url + retailers_url  + [@pid, format].join('&') )
       return Net::HTTP.get_response(  uri )
     end
     
@@ -251,34 +255,34 @@ A list of Category objects. Each Category has an id, name, and count of the numb
     def get_category_histogram( params= {})
       url= @yml[ 'base_url'].to_s
       category_histogram_url= @yml['category_histogram_url'].to_s
-      pid= "pid=" + @yml['pid'].to_s
+      #pid= "pid=" + @yml['pid'].to_s
       format= "format=" + ( params.include?( :format) ? params[:format].to_s : "json")
     
             
       if params.include?( :term)
         search_term= "fts=" +  params[:term].split().join('+').to_s
-        uri= URI.parse( url + category_histogram_url + [pid, format,search_term].join('&') )
+        uri= URI.parse( url + category_histogram_url + [@pid, format,search_term].join('&') )
       end
       
       if params.include?( :cat)
         category_id= "cat=" +params[:category].to_s 
-        uri= URI.parse( url + category_histogram_url + [pid, format, category_id].join('&') )
+        uri= URI.parse( url + category_histogram_url + [@pid, format, category_id].join('&') )
       end
     
       if params.include?( :filter)
         filter=  "fl=" + params[:filter].to_s 
-        uri= URI.parse( url + category_histogram_url + [pid, format, filter].join('&') )
+        uri= URI.parse( url + category_histogram_url + [@pid, format, filter].join('&') )
       end
       
       if params.include?( :price_drop_date)
         price_drop_date= "pdd=" + params[:price_drop_date].to_s 
-        uri= URI.parse( url + category_histogram_url + [pid, format,price_drop_date].join('&') )
+        uri= URI.parse( url + category_histogram_url + [@pid, format,price_drop_date].join('&') )
       end
       
       
       if params.include?( :product_id )
         product_id= "prodic" + params[:product_id].to_s 
-        uri= URI.parse( url + category_histogram_url + [pid, format,product_id].join('&') )
+        uri= URI.parse( url + category_histogram_url + [@pid, format,product_id].join('&') )
       end
       
      
@@ -296,7 +300,7 @@ A list of Filter objects of the given type. Each Filter has an id, name, and cou
     def get_filter_histogram( params= {})
       url= @yml[ 'base_url'].to_s
       filter_histogram_url= @yml['filter_histogram_url'].to_s
-      pid= "pid=" + @yml['pid'].to_s
+      #pid= "pid=" + @yml['pid'].to_s
       format= "format=" + ( params.include?( :format) ? params[:format].to_s : "json")
       
       if params.include?(:filter_type )
@@ -308,28 +312,28 @@ A list of Filter objects of the given type. Each Filter has an id, name, and cou
             
       if params.include?( :term)
         search_term= "fts=" +  params[:term].split().join('+').to_s
-        uri= URI.parse( url + filter_histogram_url + [pid, format,filter_type,search_term].join('&') )
+        uri= URI.parse( url + filter_histogram_url + [@pid, format,filter_type,search_term].join('&') )
       end
       
       if params.include?( :cat)
         category_id= "cat=" +params[:category].to_s 
-        uri= URI.parse( url + filter_histogram_url + [pid, format, filter_type,category_id].join('&') )
+        uri= URI.parse( url + filter_histogram_url + [@pid, format, filter_type,category_id].join('&') )
       end
     
       if params.include?( :filter)
         filter=  "fl=" + params[:filter].to_s 
-        uri= URI.parse( url + filter_histogram_url + [pid, format, filter_type ,filter].join('&') )
+        uri= URI.parse( url + filter_histogram_url + [@pid, format, filter_type ,filter].join('&') )
       end
       
       if params.include?( :price_drop_date)
         price_drop_date= "pdd=" + params[:price_drop_date].to_s 
-        uri= URI.parse( url + filter_histogram_url + [pid, format,filter_type, price_drop_date].join('&') )
+        uri= URI.parse( url + filter_histogram_url + [@pid, format,filter_type, price_drop_date].join('&') )
       end
       
       
       if params.include?( :product_id )
         product_id= "prodic" + params[:product_id].to_s 
-        uri= URI.parse( url + filter_histogram_url + [pid, format,filter_type, product_id].join('&') )
+        uri= URI.parse( url + filter_histogram_url + [@pid, format,filter_type, product_id].join('&') )
       end
       
       return Net::HTTP.get_response(  uri )

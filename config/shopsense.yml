@@ -1,0 +1,12 @@
+pid: uid9316-2194146-60
+base_url: http://api.shopstyle.com
+search_url: /action/apiSearch?
+brands_url: /action/apiGetBrands?
+look_url: /action/apiGetLook?
+looks_url: /action/apiGetLooks?
+retailers_url: /action/apiGetRetailers?
+stylebook_url: /action/apiGetStylebook?
+visit_retailers_url: /action/apiVisitRetailer?
+trends_url: /action/apiGetTrends?
+category_histogram_url: /action/apiGetCategoryHistogram?
+filter_histogram_url: /action/apiGetFilterHistogram?
