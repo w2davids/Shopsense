@@ -7,7 +7,6 @@ pid: <uid_for_your_api_key>
 
 
 # Example
-
 require 'rubygems'
 require 'Shopsense'
 
@@ -21,5 +20,27 @@ yml= shopsense.load_config(yml_config_filename);
 # Search
 puts shopsense.do_search({:format => 'json', :term =>'red dress', :min=> 0, :count => 10 });
 
+# Get Trends for category_id 109
+puts shopsense.get_trends( :category => 109)
 
+# Get a particular look
+puts shopsense.get_look( :look => 548347 )
+
+# Get looks by category type eg. New, Celebrities, TopRated, Featured 
+puts shopsense.get_looks(:type => "Celebrities")
+
+# Get a stylebook by user handle
+puts shopsense.get_stylebook( {:handle => 'FabSugar'} )
+
+# Get all brands
+puts shopsense.get_brands({})
+
+# Get all retailers
+puts shopsense.get_retailers({})
+
+# Get Category histogram by search term etc
+puts shopsense.get_category_histogram({:term => 'red dress'})
+
+# Get filtered histogram by filterType
+puts shopsense.get_filter_histogram({:filter_type => 'Retailer', :term => 'red dress'})
 
