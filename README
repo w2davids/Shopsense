@@ -1,12 +1,13 @@
 == Shopsense
 
-Installation 
-
+<h2>Installation</h2> 
+================
 sudo gem install Shopsense
 
 
 
-API Overview
+<h2>API Overview</h2>
+============
 
 # Set your API key in the shopsense.yml file
 pid: <uid_for_your_api_key>
