@@ -84,6 +84,34 @@ prodid	The id of a specific product to return. This may be specified multiple ti
       
     end
     
+=begin
+find_product_by_id 
+This method gets a single product matching the specified ID.
+http://www.shopstyle.com/action/apiSearch?pid=uid9316-2194146-60&prodid=348703188
+
+id The unique product ID for the product.
+
+params The optional parameters. For this method, only :format is the only applicable parameter, with default value of "json". Supported values are:
+xml - The response is in XML format with UTF-8 encoding. This is the default if the parameter is absent.
+json - The response is in JSON format with UTF-8 encoding.
+json2 - Same as json, but numbers and booleans are returned as JSON numbers and booleans instead of strings.
+jsonvar - The response is in JSON format with UTF-8 encoding and includes a JavaScript assignment statement. This is useful when the API URL is the src attribute of a script tag, as the result is stored in a variable that can be used by subsequent JavaScript code.
+jsonvar2 - Same as jsonvar, but numbers and booleans are returned as JSON numbers and booleans instead of strings.
+jsonp - The response is in JSON format with UTF-8 encoding wrapped in a JavaScript method called padding. The padding must be specified with the query parameter 'callback'. Only single expressions (function reference, or object property function reference) are accepted as valid paddings.
+rss - The response is an RSS feed (beta).
+
+Response
+A search result containing 0 or 1 items in 'products'.
+=end
+    def find_product_by_id(id, params = {})
+      url= @yml[ 'base_url'].to_s
+      search_url= @yml['search_url'].to_s
+      format= "format=" + ( params.include?( :format) ? params[:format].to_s : "json")
+      
+      prod_id = "prodid=" + id.to_s
+      uri= URI.parse( url + search_url + [@pid, format, prod_id].join('&') )
+      return Net::HTTP.get_response(uri)
+    end 
     
 =begin
 apiGetTrends
