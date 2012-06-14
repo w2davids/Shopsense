@@ -76,7 +76,7 @@ prodid	The id of a specific product to return. This may be specified multiple ti
     
       if params.include?(:term)
         search_term= "fts=" +  params[:term].split().join('+').to_s
-        uri= URI.parse( url + search_url + [@pid, format, search_term, min_result, count].join('&') )
+        uri= URI.parse(URI.escape( url + search_url + [@pid, format, search_term, min_result, count].join('&')) )
         return Net::HTTP.get_response(  uri )
       else
         raise "No search term provided!"
